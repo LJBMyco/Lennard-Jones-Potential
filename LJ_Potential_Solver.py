@@ -6,6 +6,8 @@ from MDUtilities import SetInitialPositions
 from MDUtilities import SetInitialVelocities
 import typing
 import pandas as pd
+from tqdm import tqdm
+from datetime import datetime
 
 ########## Separations ##########
 
@@ -174,6 +176,9 @@ def velocity_verlet(particles: list, dt: float, box_size: np.array, particle_num
 
 def main():
 
+    start_time = datetime.now()
+    print(f'{start_time}: Running simulation')
+
     #Load in data
     in_file_handle = open('param.input.txt')
     line = in_file_handle.readline()
@@ -225,41 +230,52 @@ def main():
     total_energy_list.append(total_energy)
     msd_list.append(msd)
 
+    data_load_time = datetime.now()
+    print(f'{data_load_time}: Data and initial conditions loaded')
+
     # Begin simulation
-    for n in range(step_number):
+    with tqdm(total = step_number) as pbar:
+        for n in range(step_number):
 
-        # Velocity verlet update
-        particles, force_array, separation_array = velocity_verlet(
-            particles, dt, box_size, particle_number, force_array, cut_distance)
+            # Velocity verlet update
+            particles, force_array, separation_array = velocity_verlet(
+                particles, dt, box_size, particle_number, force_array, cut_distance)
 
-        # Increment time
-        time += dt
+            # Increment time
+            time += dt
 
-        # Calculate observables
-        total_ke = total_kinetic(particles, particle_number)
-        total_pe = total_potential(
-            separation_array, particle_number, cut_distance)
-        total_energy = total_ke + total_pe
-        msd = mean_square_displacement(
-            initial_positions, particles, particle_number, box_size)
+            # Calculate observables
+            total_ke = total_kinetic(particles, particle_number)
+            total_pe = total_potential(
+                separation_array, particle_number, cut_distance)
+            total_energy = total_ke + total_pe
+            msd = mean_square_displacement(
+                initial_positions, particles, particle_number, box_size)
 
-        # Output data
-        point = "Point = " + str(n + 2)
-        write_traj(particles, particle_number, point, out_file_handle)
-        time_list.append(time)
-        ke_list.append(total_ke)
-        pe_list.append(total_pe)
-        total_energy_list.append(total_energy)
-        msd_list.append(msd)
+            # Output data
+            point = "Point = " + str(n + 2)
+            write_traj(particles, particle_number, point, out_file_handle)
+            time_list.append(time)
+            ke_list.append(total_ke)
+            pe_list.append(total_pe)
+            total_energy_list.append(total_energy)
+            msd_list.append(msd)
 
-        print(f'{n}/{step_number}', end='\r')
+            pbar.update(1)
+            pbar.set_description(f'{datetime.now()}: Running')
 
+            if n == step_number-1:
+                pbar.set_description(f'{datetime.now()}: Finished')
 
+    simulation_end_time = datetime.now()
+    print(f'{simulation_end_time}: Simulation completed in {simulation_end_time-start_time}')
     #Save data 
     handles = ['Time', 'Kinetic Energy', 'Potential Energy', 'Total Energy', 'Mean Square Displacement']
     data = pd.DataFrame(data = np.array([time_list, ke_list, pe_list, total_energy_list, msd_list]).T, columns=handles)
     data.to_excel('Outputs/data.xlsx',
                   'Sheet1', index=None)
+
+    print(f'{datetime.now()}: Data saved')
 
 
 if __name__ == '__main__':
