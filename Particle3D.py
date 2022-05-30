@@ -40,11 +40,45 @@ class Particle3D(object):
 
         return pos1-pos2
 
-    def pbc(vector, box_size):
+    def pbc(vector: np.array, box_size: np.array) -> np.array:
+        """
+        Returns a vector using periodic boundary conditions
 
+        Parameters:
+        ----------
+
+        vector: np.array
+            3D position vector of particle
+        box_size: np.array
+            Length of each box side
+
+        Returns:
+        --------
+
+        np.array:
+            The position vector with PBC applied
+        """
         return np.mod(vector, box_size)
 
-    def mic(vector, box_size):
+    def mic(vector: np.array, box_size: np.array) -> np.array:
+
+        """
+        Returns a position of a vector using minimum image convention
+
+        Parameters:
+        ----------
+
+        vector: np.array
+            vector between two particles
+        box_size: np.array
+            Length of each box side
+
+        Returns:
+        --------
+
+        mic_vector: np.array
+            The vector between two particles with MIC applied
+        """
 
         mic_vector = np.zeros(len(vector))
         mic_vector = np.mod((vector + box_size/2.0), box_size) - (box_size/2.0)
