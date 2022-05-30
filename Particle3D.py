@@ -1,6 +1,7 @@
 import numpy as np
 import random
 
+
 class Particle3D(object):
 
     def __init__(self, mass, label, position, velocity) -> None:
@@ -16,18 +17,16 @@ class Particle3D(object):
 
     def kinetic_energy(self) -> float:
 
-        return 0.5*self.mass* (np.linalg.norm(self.velocity)**2.0)
+        return 0.5*self.mass * (np.linalg.norm(self.velocity)**2.0)
 
-    def velocity_update(self, dt:float, force: np.array) -> None:
-
+    def velocity_update(self, dt: float, force: np.array) -> None:
         """
         Velocity update according to Velocity Verlet
         """
 
         self.velocity += dt*(force/self.mass)
 
-    def position_update(self, dt:float, force:np.array) -> None:
-
+    def position_update(self, dt: float, force: np.array) -> None:
         """
         Position update according to Velocity Verlet
         """
@@ -35,7 +34,7 @@ class Particle3D(object):
         self.position += dt*self.velocity + 0.5*(dt**2.0)*(force/self.mass)
 
     @staticmethod
-    def generate_particle(index:int) -> 'Particle3D':
+    def generate_particle(index: int) -> 'Particle3D':
 
         mass = 1.0
         label = str(index+1)
@@ -68,7 +67,6 @@ class Particle3D(object):
         return np.mod(vector, box_size)
 
     def mic(vector: np.array, box_size: np.array) -> np.array:
-
         """
         Returns a position of a vector using minimum image convention
 
