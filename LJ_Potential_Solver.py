@@ -5,7 +5,7 @@ from Particle3D import Particle3D
 from MDUtilities import SetInitialPositions
 from MDUtilities import SetInitialVelocities
 import typing
-
+import pandas as pd
 
 ########## Separations ##########
 
@@ -186,7 +186,7 @@ def main():
     cut_distance = float(tokens[5])
 
     # Open out file
-    out_file_handle = open('traj.xyz', 'w')
+    out_file_handle = open('Outputs/traj.xyz', 'w')
 
     # Initialise simulaiton
     time = 0.0
@@ -254,11 +254,12 @@ def main():
 
         print(f'{n}/{step_number}', end='\r')
 
-    np.save('time.npy', time_list)
-    np.save('kinetic_energy.npy', ke_list)
-    np.save('potential_energy.npy', pe_list)
-    np.save('total_energy.npy', total_energy_list)
-    np.save('msd.npy', msd_list)
+
+    #Save data 
+    handles = ['Time', 'Kinetic Energy', 'Potential Energy', 'Total Energy', 'Mean Square Displacement']
+    data = pd.DataFrame(data = np.array([time_list, ke_list, pe_list, total_energy_list, msd_list]).T, columns=handles)
+    data.to_excel('Outputs/data.xlsx',
+                  'Sheet1', index=None)
 
 
 if __name__ == '__main__':
