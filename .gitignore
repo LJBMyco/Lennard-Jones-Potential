@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#Personal Directories
+Outputs
+Brainstorming
+
 # C extensions
 *.so
 
