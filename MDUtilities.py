@@ -8,6 +8,8 @@ Computer Modelling Project B: MD methods
 import random
 import numpy as np
 
+random.seed(123456)
+
 def SetInitialPositions(rho, particles):
 
     # Determine number of particles
