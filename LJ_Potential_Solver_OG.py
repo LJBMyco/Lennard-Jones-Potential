@@ -285,7 +285,7 @@ def main():
                'Total Energy']
     data = pd.DataFrame(data=np.array(
         [time_list, ke_list, pe_list, total_energy_list]).T, columns=handles)
-    data.to_excel('Output/data_OG.xlsx',
+    data.to_excel('Outputs/data_OG.xlsx',
                   'Sheet1', index=None)
 
     print(f'{datetime.now()}: Data saved')

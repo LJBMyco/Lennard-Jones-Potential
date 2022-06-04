@@ -103,7 +103,7 @@ def main():
     cut_distance = float(tokens[5])
 
     #Open out file
-    out_file_handle = open('Output/traj.xyz', 'w')
+    out_file_handle = open('Outputs/traj.xyz', 'w')
 
     time = 0.0
 
@@ -204,7 +204,7 @@ def main():
                'Total Energy']
     data = pd.DataFrame(data=np.array(
         [time_list, ke_list, pe_list, total_energy_list]).T, columns=handles)
-    data.to_excel('Output/data.xlsx',
+    data.to_excel('Outputs/data.xlsx',
                   'Sheet1', index=None)
 
     print(f'{datetime.now()}: Data saved')
